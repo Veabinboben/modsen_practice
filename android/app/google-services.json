@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1004850168062",
+    "project_id": "modsenpr",
+    "storage_bucket": "modsenpr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004850168062:android:bc455a2a70849fac3965af",
+        "android_client_info": {
+          "package_name": "com.veab.modsenpractice.modsen_practice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvwA54SVyIOc5KHuTbTeB1j-UvuLLx-ok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

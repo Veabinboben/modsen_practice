@@ -3,7 +3,7 @@ import 'package:modsen_practice/domain/repository/abstract_example_repo.dart';
 
 class ExampleCubit extends Cubit<String>{
   ExampleCubit(AbstractExampleRepo repo) : _repo = repo, super ("Initial"){
-    //set();
+    set();
   }
 
   late final AbstractExampleRepo _repo;
