@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 abstract class AbstractLocalDbSource{
   Future<User?> getUserFormDb();
   Future<void> saveUserToDb(User user);
+  Future<void> deleteUserFromDb();
 }
 
 class IsarDbSource extends AbstractLocalDbSource{
@@ -26,7 +27,16 @@ class IsarDbSource extends AbstractLocalDbSource{
 
   @override
   Future<void> saveUserToDb(user) async{
-    _isar.users.put(user);
+    await _isar.writeTxn(() async {
+      await _isar.users.put(user);
+    });
+  }
+
+  @override
+  Future<void> deleteUserFromDb() async {
+    await _isar.writeTxn(() async {
+      await _isar.users.clear();
+    });
   }
 
 }
