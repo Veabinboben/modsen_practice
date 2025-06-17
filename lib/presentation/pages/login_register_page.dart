@@ -11,31 +11,37 @@ class LoginRegisterPage extends StatelessWidget {
 
   final bool isLogin;
   late final LoginRegisterBloc bloc;
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
 
   String? emailValidator(String? value) {
-    if (value == null || value.isEmpty) return "Email can't be empty";
-    final emailRegEx = RegExp(r'[\w\-\.]+@([\w\-]+\.)+[\w\-]+');
-    var res = emailRegEx.hasMatch(value);
+    if (value == null || value.isEmpty) {
+      return "Email can't be empty";
+    }
+    final RegExp emailRegEx = RegExp(r'[\w\-\.]+@([\w\-]+\.)+[\w\-]+');
+    final bool res = emailRegEx.hasMatch(value);
     if (res == false) {
-      return "Invalid email format";
-    } else
+      return 'Invalid email format';
+    } else {
       return null;
+    }
   }
 
   String? passwordValidator(String? value) {
-    if (value == null || value.isEmpty) return "Password can't be empty";
-    var res = value.length >= 6;
-    if (res == false)
-      return "Too short";
-    else
+    if (value == null || value.isEmpty) {
+      return "Password can't be empty";
+    }
+    final bool res = value.length >= 6;
+    if (res == false) {
+      return 'Too short';
+    } else {
       return null;
+    }
   }
 
   void buttonAction () {
-    var res = _formKey.currentState!.validate();
+    final bool res = _formKey.currentState!.validate();
     if(isLogin == true) {
       bloc.add(
         TryLogInEvent(
@@ -56,12 +62,14 @@ class LoginRegisterPage extends StatelessWidget {
     }
   }
 
-  FlashyFlushbar flushbar (String message, BuildContext context) => FlashyFlushbar(
+  FlashyFlushbar flushbar (String message, BuildContext context) =>
+      FlashyFlushbar(
     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     message: message,
     messageStyle: DefaultTextStyle.of(context).style,
-    trailingWidget: IconButton(onPressed: (){FlashyFlushbar.cancel();}, icon: Icon(Icons.close)),
-    duration: Duration(seconds: 2),
+    trailingWidget: const IconButton(onPressed: FlashyFlushbar.cancel,
+        icon: Icon(Icons.close)),
+    duration: const Duration(seconds: 2),
     isDismissible: false
   );
 
@@ -72,15 +80,20 @@ class LoginRegisterPage extends StatelessWidget {
     //  maybe init state (so convert to stfl)
     bloc = BlocProvider.of<LoginRegisterBloc>(context);
 
-    final appBarText = isLogin == true? "Log In" : "Register";
-    final welcomeText = isLogin == true? "Provide credentials \n to log in" : "Let's create \n your account";
+    final String appBarText = isLogin == true? 'Log In' : 'Register';
+    final String welcomeText = isLogin == true?
+    ' Provide credentials \n to log in' :
+    " Let's create \n your account";
 
     return BlocConsumer<LoginRegisterBloc, LoginRegisterState>(
       bloc: bloc,
-      listener: (context, state) {
+      listener: (BuildContext context, LoginRegisterState state) {
         //flushbar("hello",context).show();
-        if (state is WaitingReplyState) LoadingOverlay.show(context);
-          else LoadingOverlay.hide();
+        if (state is WaitingReplyState) {
+          LoadingOverlay.show(context);
+        } else {
+          LoadingOverlay.hide();
+        }
         switch (state) {
           case SuccessfulLogInState():
             context.go('/test');
@@ -89,19 +102,19 @@ class LoginRegisterPage extends StatelessWidget {
             context.go('/welcome');
             break;
           case InvalidFormState():
-            flushbar("Invalid email or password, check fields",context).show();
+            flushbar('Invalid email or password, check fields',context).show();
             break;
           case FailedRegisterState():
-            flushbar("Could not register, check internet connection",context).show();
+            flushbar('Could not register, check internet connection',context).show();
             break;
           case FailedLogInState():
-            flushbar("Could not log in, check internet connection",context).show();
+            flushbar('Could not log in, check internet connection',context).show();
             break;
           default:
             break;
         }
       },
-      builder: (context, state) {
+      builder: (BuildContext context, LoginRegisterState state) {
         return Form(
           key: _formKey,
           child: Scaffold(
@@ -110,12 +123,12 @@ class LoginRegisterPage extends StatelessWidget {
               title:  Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                    children: <Widget>[
                       Text(appBarText),
-                      Hero(tag: 'Logo', child: Image.asset("assets/splash.png",scale: 16,),),
+                      Hero(tag: 'Logo', child: Image.asset('assets/splash.png',scale: 16,),),
                       IconButton(onPressed: (){
                         context.pop();
-                      }, icon: Icon(Icons.arrow_back))
+                      }, icon: const Icon(Icons.arrow_back))
                     ],
                   )
               ),
@@ -128,19 +141,20 @@ class LoginRegisterPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    SizedBox(height: 10,),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(welcomeText, style: TextStyle(
+                      child: Text(welcomeText, style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 40,
                       ),),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Enter your email adress"
+                        decoration: const InputDecoration(
+                            hintText: 'Enter your email adress'
                         ),
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -151,8 +165,8 @@ class LoginRegisterPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
-                        decoration: InputDecoration(
-                            hintText: "Enter password"
+                        decoration: const InputDecoration(
+                            hintText: 'Enter password'
                         ),
                         controller: _passwordController,
                         keyboardType: TextInputType.visiblePassword,
@@ -160,7 +174,7 @@ class LoginRegisterPage extends StatelessWidget {
                         validator: passwordValidator,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     InkWell(
                       onTap: buttonAction,
                       child: Ink(height: 50, color: Colors.blue,

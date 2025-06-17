@@ -20,6 +20,10 @@ class FailedLogInState extends LoginRegisterState{
   FailedLogInState() : super();
 }
 
+class FailedLogOutState extends LoginRegisterState{
+  FailedLogOutState() : super();
+}
+
 class SuccessfulRegisterState extends LoginRegisterState{
   SuccessfulRegisterState() : super();
 }

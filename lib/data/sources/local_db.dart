@@ -1,11 +1,12 @@
 import 'package:isar/isar.dart';
+import 'package:modsen_practice/main.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/user_model.dart';
 
 abstract class AbstractLocalDbSource{
-  Future<User?> getUserFormDb();
-  Future<void> saveUserToDb(User user);
+  Future<User?> getUserFormDb(int id);
+  Future<void> saveUserToDb(User user,int id);
   Future<void> deleteUserFromDb();
 }
 
@@ -20,16 +21,18 @@ class IsarDbSource extends AbstractLocalDbSource{
   late final Isar _isar;
 
   @override
-  Future<User?> getUserFormDb() async{
-    final user = await _isar.users.where().findFirst();
+  Future<User?> getUserFormDb(int id) async{
+    final user = await _isar.users.get(id);
+    logger.i("user got $user");
     return user;
   }
 
   @override
-  Future<void> saveUserToDb(user) async{
+  Future<void> saveUserToDb(user, int id) async{
     await _isar.writeTxn(() async {
-      await _isar.users.put(user);
+      await _isar.users.put(user..id = id);
     });
+    logger.i("user set $user");
   }
 
   @override
@@ -37,6 +40,7 @@ class IsarDbSource extends AbstractLocalDbSource{
     await _isar.writeTxn(() async {
       await _isar.users.clear();
     });
+    logger.i("user dead");
   }
 
 }

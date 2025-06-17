@@ -13,17 +13,21 @@ class UserRepo extends AbstractUserRepo{
   late final AbstractLocalDbSource _localSource;
   late final AbstractLoginSource _remoteLogin;
   final LocalAuthentication _localauth = LocalAuthentication();
+  final int _userId = 1;
 
-  @override
   Future<User?> _getUser() async{
-    final user = await _localSource.getUserFormDb();
+    final user = await _localSource.getUserFormDb(_userId);
     return user;
   }
 
-  @override
   Future<void> _saveUser(User user) async{
-    _localSource.saveUserToDb(user);
+    _localSource.saveUserToDb(user,_userId);
   }
+
+  Future<void> _deleteUser() async{
+    _localSource.deleteUserFromDb();
+  }
+
 
   Future<bool> quickLogin() async {
     final bool canAuthenticateWithBiometrics = await _localauth.canCheckBiometrics;
@@ -65,6 +69,14 @@ class UserRepo extends AbstractUserRepo{
 
   Future<bool> register(User user) async {
     var result = await _remoteLogin.registerUser(user.email!, user.password!);
+    return result;
+  }
+
+  Future<bool> logout() async {
+    var result = await _remoteLogin.logoutUser();
+    if (result == true){
+      _deleteUser();
+    }
     return result;
   }
 

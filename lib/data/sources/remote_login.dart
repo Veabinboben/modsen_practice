@@ -47,6 +47,7 @@ class FirebaseLoginSource extends AbstractLoginSource{
       return true;
     }
     on FirebaseException catch (e){
+      logger.e("${e.code} ${e.message}");
       return false;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:modsen_practice/data/models/user_model.dart';
 import 'package:modsen_practice/domain/repository/abstract_user_repo.dart';
 
@@ -10,15 +11,25 @@ class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
   LoginRegisterBloc(AbstractUserRepo repo)
     : _repo = repo,
       super(NotLoggedInState()) {
-    on<TryLogInEvent>(_tryLogInEvent);
-    on<TryRegisterEvent>(_tryRegisterEvent);
-    on<TryQuickLogInEvent>(_tryQuickLogInEvent);
+    on<TryLogInEvent>(_tryLogInEvent,transformer: sequential());
+    on<TryRegisterEvent>(_tryRegisterEvent,transformer: sequential());
+    on<TryQuickLogInEvent>(_tryQuickLogInEvent,transformer: sequential());
+    on<TryLogOutEvent>(_tryLogOutEvent,transformer: sequential());
   }
 
   AbstractUserRepo _repo;
 
   //Template
   //_name(Event event, Emitter<LoginState> emitter) async{
+
+  Future<void> _tryLogOutEvent (TryLogOutEvent event, Emitter<LoginRegisterState> emitter) async {
+    emitter(WaitingReplyState());
+    var result = await _repo.logout();
+    if (result == true)
+      emitter(NotLoggedInState());
+    else
+      emitter(FailedLogOutState());
+  }
 
   Future<void> _tryLogInEvent(
     TryLogInEvent event,
@@ -47,7 +58,7 @@ class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
     emitter(WaitingReplyState());
     final result = await _repo.register(User(event.email, event.password));
     if (result == true)
-      emitter(SuccessfulLogInState());
+      emitter(SuccessfulRegisterState());
     else
       emitter(FailedLogInState());
   }
