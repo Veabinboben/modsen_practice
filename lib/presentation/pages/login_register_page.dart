@@ -108,7 +108,7 @@ class LoginRegisterPage extends StatelessWidget {
             flushbar('Could not register, check internet connection',context).show();
             break;
           case FailedLogInState():
-            flushbar('Could not log in, check internet connection',context).show();
+            flushbar('Could not log in, verify credentials and check internet connection',context).show();
             break;
           default:
             break;

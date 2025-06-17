@@ -57,53 +57,56 @@ class _WelcomePageState extends State<WelcomePage>
                 break;
             }
           },
-          child: Container(
-            child: Column(
-              spacing: 10,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Hero(
-                  tag: 'Logo',
-                  child: Image.asset("assets/splash.png", scale: 4),
-                ),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Container(
-                    height: _moveAnimation.value,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        spacing: 10,
-                      children: [
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                          text: "Hello to Crypto!\n",
-                          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),
-                          children: [
-                            TextSpan(
-                              text: "All your crypto transactions in one place! Track coins, add portfolios, buy & sell",
-                              style: DefaultTextStyle.of(context).style,
-                            )
-                          ]
-                        ),),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.push("/login");
-                          },
-                          child: Text("         Login         "),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            context.push("/register");
-                          },
-                          child: Text("       Register       "),
-                        ),
-                      ],
-                    ),
+          child: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                spacing: 10,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Hero(
+                    tag: 'Logo',
+                    child: Image.asset("assets/splash.png", scale: 4,),
+                  ),
+                  FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Container(
+                      height: _moveAnimation.value,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          spacing: 10,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                            text: "Hello to Crypto!\n",
+                            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30),
+                            children: [
+                              TextSpan(
+                                text: "All your crypto transactions in one place! Track coins, add portfolios, buy & sell",
+                                style: DefaultTextStyle.of(context).style,
+                              )
+                            ]
+                          ),),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.push("/login");
+                            },
+                            child: Text("         Login         "),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              context.push("/register");
+                            },
+                            child: Text("       Register       "),
+                          ),
+                        ],
+                      ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
