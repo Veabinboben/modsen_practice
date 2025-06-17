@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 
-import '../blocs/login_register_bloc.dart';
 
 class ExamplePage extends StatelessWidget {
   const ExamplePage({super.key});
@@ -10,13 +10,14 @@ class ExamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final bloc = BlocProvider.of<LoginRegisterBloc>(context);
+    final cubit = BlocProvider.of<AuthCubit>(context);
 
     return BlocConsumer(
-        bloc: bloc,
+        bloc: cubit,
         listener: (context, state){
           switch (state){
-            case NotLoggedInState(): context.go('/welcome');
+            case LoggedOutState():
+              context.go('/welcome');
               break;
             default:
               break;
@@ -25,7 +26,7 @@ class ExamplePage extends StatelessWidget {
         builder: (context, state) => Container(
           child: Center(
             child: ElevatedButton(onPressed: (){
-              bloc.add(TryLogOutEvent());
+              cubit.logout();
             }, child: Text("logout"))
             ,),
         ),

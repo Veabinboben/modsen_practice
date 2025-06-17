@@ -12,6 +12,10 @@ class WaitingReplyState extends LoginRegisterState{
   WaitingReplyState() : super();
 }
 
+class TryingLogInState extends LoginRegisterState{
+  TryingLogInState() : super();
+}
+
 class SuccessfulLogInState extends LoginRegisterState{
   SuccessfulLogInState() : super();
 }
@@ -20,18 +24,17 @@ class FailedLogInState extends LoginRegisterState{
   FailedLogInState() : super();
 }
 
-class FailedLogOutState extends LoginRegisterState{
-  FailedLogOutState() : super();
-}
-
 class SuccessfulRegisterState extends LoginRegisterState{
   SuccessfulRegisterState() : super();
+}
+
+class TryingRegisterState extends LoginRegisterState{
+  TryingRegisterState() : super();
 }
 
 class FailedRegisterState extends LoginRegisterState{
   FailedRegisterState() : super();
 }
-
 
 class InvalidFormState extends LoginRegisterState{
   InvalidFormState() : super();

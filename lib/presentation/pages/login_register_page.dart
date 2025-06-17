@@ -3,14 +3,18 @@ import 'package:flashy_flushbar/flashy_flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/login_register_bloc.dart';
 import 'package:modsen_practice/presentation/widgets/loading_overlay.dart';
+
+import '../../data/models/user_model.dart';
 
 class LoginRegisterPage extends StatelessWidget {
   LoginRegisterPage({this.isLogin = true,super.key});
 
   final bool isLogin;
   late final LoginRegisterBloc bloc;
+  late final AuthCubit authCubit;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -79,114 +83,145 @@ class LoginRegisterPage extends StatelessWidget {
     // TODO: probably should place it in some other place,
     //  maybe init state (so convert to stfl)
     bloc = BlocProvider.of<LoginRegisterBloc>(context);
+    authCubit = BlocProvider.of<AuthCubit>(context);
 
     final String appBarText = isLogin == true? 'Log In' : 'Register';
     final String welcomeText = isLogin == true?
     ' Provide credentials \n to log in' :
     " Let's create \n your account";
 
-    return BlocConsumer<LoginRegisterBloc, LoginRegisterState>(
-      bloc: bloc,
-      listener: (BuildContext context, LoginRegisterState state) {
-        //flushbar("hello",context).show();
-        if (state is WaitingReplyState) {
-          LoadingOverlay.show(context);
-        } else {
-          LoadingOverlay.hide();
-        }
-        switch (state) {
-          case SuccessfulLogInState():
-            context.go('/test');
+    return BlocListener(
+      bloc: authCubit,
+      listener: (context,state){
+        switch (state){
+          case LoggedInState():
+            bloc.add(FinalizeLogInEvent(true));
             break;
-          case SuccessfulRegisterState():
-            context.go('/welcome');
+          case RegisteredState():
+            bloc.add(FinalizeRegisterEvent(true));
             break;
-          case InvalidFormState():
-            flushbar('Invalid email or password, check fields',context).show();
+          case LogInFailedState():
+            bloc.add(FinalizeLogInEvent(false));
             break;
-          case FailedRegisterState():
-            flushbar('Could not register, check internet connection',context).show();
-            break;
-          case FailedLogInState():
-            flushbar('Could not log in, verify credentials and check internet connection',context).show();
-            break;
-          default:
+          case RegisterFailedState():
+            bloc.add(FinalizeRegisterEvent(false));
             break;
         }
       },
-      builder: (BuildContext context, LoginRegisterState state) {
-        return Form(
-          key: _formKey,
-          child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title:  Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(appBarText),
-                      Hero(tag: 'Logo', child: Image.asset('assets/splash.png',scale: 16,),),
-                      IconButton(onPressed: (){
-                        context.pop();
-                      }, icon: const Icon(Icons.arrow_back))
-                    ],
-                  )
+      child: BlocConsumer<LoginRegisterBloc, LoginRegisterState>(
+        bloc: bloc,
+        listener: (BuildContext context, LoginRegisterState state) {
+          //flushbar("hello",context).show();
+          if (state is WaitingReplyState) {
+            LoadingOverlay.show(context);
+          } else {
+            LoadingOverlay.hide();
+          }
+          switch (state) {
+            case TryingLogInState():
+              bloc.add(StartWaitingEvent());
+              authCubit.login(User(_emailController.text,
+                _passwordController.text,));
+              break;
+              case TryingRegisterState():
+              bloc.add(StartWaitingEvent());
+              authCubit.register(User(_emailController.text,
+                _passwordController.text,));
+              break;
+            case SuccessfulLogInState():
+              context.go('/test');
+              break;
+            case SuccessfulRegisterState():
+              flushbar('Successful Registration!, try logging in now',context).show();
+              context.go('/welcome');
+              break;
+            case InvalidFormState():
+              flushbar('Invalid email or password, check fields',context).show();
+              break;
+            case FailedRegisterState():
+              flushbar('Could not register, check internet connection',context).show();
+              break;
+            case FailedLogInState():
+              flushbar('Could not log in, verify credentials and check internet connection',context).show();
+              break;
+            default:
+              break;
+          }
+        },
+        builder: (BuildContext context, LoginRegisterState state) {
+          return Form(
+            key: _formKey,
+            child: Scaffold(
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                title:  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(appBarText),
+                        Hero(tag: 'Logo', child: Image.asset('assets/splash.png',scale: 16,),),
+                        IconButton(onPressed: (){
+                          context.pop();
+                        }, icon: const Icon(Icons.arrow_back))
+                      ],
+                    )
+                ),
               ),
-            ),
-            body: SingleChildScrollView(
-              reverse: true,
-              child: Container(
-                height: MediaQuery.of(context).size.height - 85,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10,),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(welcomeText, style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
-                      ),),
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            hintText: 'Enter your email adress'
-                        ),
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        //autovalidateMode: AutovalidateMode.always,
-                        validator: emailValidator,
+              body: SingleChildScrollView(
+                reverse: true,
+                child: Container(
+                  height: MediaQuery.of(context).size.height - 85,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10,),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(welcomeText, style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                            hintText: 'Enter password'
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Enter your email adress'
+                          ),
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          //autovalidateMode: AutovalidateMode.always,
+                          validator: emailValidator,
                         ),
-                        controller: _passwordController,
-                        keyboardType: TextInputType.visiblePassword,
-                        //autovalidateMode: AutovalidateMode.always,
-                        validator: passwordValidator,
                       ),
-                    ),
-                    const Spacer(),
-                    InkWell(
-                      onTap: buttonAction,
-                      child: Ink(height: 50, color: Colors.blue,
-                        child: Center(child: Text(appBarText)),),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                              hintText: 'Enter password'
+                          ),
+                          controller: _passwordController,
+                          keyboardType: TextInputType.visiblePassword,
+                          //autovalidateMode: AutovalidateMode.always,
+                          validator: passwordValidator,
+                        ),
+                      ),
+                      const Spacer(),
+                      InkWell(
+                        onTap: buttonAction,
+                        child: Ink(height: 50, color: Colors.blue,
+                          child: Center(child: Text(appBarText)),),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

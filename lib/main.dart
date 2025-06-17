@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:modsen_practice/data/repository/concrete_example_repo.dart';
 import 'package:modsen_practice/data/sources/local_db.dart';
 import 'package:modsen_practice/data/sources/remote_login.dart';
+import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/example_cubit.dart';
 import "package:dio/dio.dart";
 import 'package:firebase_core/firebase_core.dart';
@@ -39,12 +40,13 @@ class MyApp extends StatelessWidget {
       // create: (BuildContext context) => ExampleCubit(ConcreteExampleRepo(Dio())),
       providers: [
         BlocProvider(create: (BuildContext context) => ExampleCubit(ConcreteExampleRepo(Dio()))),
+        BlocProvider(create: (BuildContext context) => LoginRegisterBloc()),
         BlocProvider(create: (BuildContext context) {
           final dbSource = IsarDbSource();
           dbSource.init();
           final loginSource = FirebaseLoginSource();
           final repo = UserRepo(dbSource,loginSource);
-          return LoginRegisterBloc(repo);
+          return AuthCubit(repo);
         }),
       ],
       child: MaterialApp.router(

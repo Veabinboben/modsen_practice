@@ -1,8 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 
-import '../blocs/login_register_bloc.dart';
+import '../../main.dart';
+
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -17,14 +20,14 @@ class _WelcomePageState extends State<WelcomePage>
   late Animation _moveAnimation;
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  late final LoginRegisterBloc bloc;
+  late final AuthCubit cubit;
 
   @override
   void initState() {
     super.initState();
 
-    bloc = BlocProvider.of<LoginRegisterBloc>(context);
-    bloc.add(TryQuickLogInEvent());
+    cubit = BlocProvider.of<AuthCubit>(context);
+    cubit.quickLogin();
 
     _moveController = AnimationController(duration: Duration(seconds: 1),vsync: this);
     _moveAnimation = Tween<double>(begin: 0, end: 300).animate(CurvedAnimation(parent: _moveController, curve: Curves.easeOut));
@@ -48,10 +51,14 @@ class _WelcomePageState extends State<WelcomePage>
       animation: _moveController,
       builder: (context, _) {
         return BlocListener(
-          bloc: bloc,
+          bloc: cubit,
           listener: (context,state){
             switch (state){
-              case SuccessfulLogInState:
+              case LoggedInState():
+                context.go('/test');
+                break;
+              case LogInFailedState():
+                logger.e("Wont quick login, no biometry");
                 break;
               default:
                 break;

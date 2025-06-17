@@ -12,11 +12,6 @@ class TryLogInEvent extends LoginRegisterEvent{
   bool formValid;
 }
 
-class TryQuickLogInEvent extends LoginRegisterEvent{
-  TryQuickLogInEvent();
-}
-
-
 
 class TryRegisterEvent extends LoginRegisterEvent{
   TryRegisterEvent(this.email,this.password,this.formValid);
@@ -26,8 +21,20 @@ class TryRegisterEvent extends LoginRegisterEvent{
   bool formValid;
 }
 
-class TryLogOutEvent extends LoginRegisterEvent{
-  const TryLogOutEvent();
+class StartWaitingEvent extends LoginRegisterEvent{
+  StartWaitingEvent();
+}
+
+class FinalizeLogInEvent extends LoginRegisterEvent{
+  FinalizeLogInEvent(this.success);
+
+  bool success;
+}
+
+class FinalizeRegisterEvent extends LoginRegisterEvent{
+  FinalizeRegisterEvent(this.success);
+
+  bool success;
 }
 
 
