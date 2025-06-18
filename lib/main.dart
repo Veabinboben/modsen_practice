@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:modsen_practice/data/repository/concrete_example_repo.dart';
+import 'package:modsen_practice/data/repository/user_repo.dart';
 import 'package:modsen_practice/data/sources/local_user_db.dart';
-import 'package:modsen_practice/data/sources/remote_login.dart';
+
 import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/example_cubit.dart';
 import "package:dio/dio.dart";
 import 'package:firebase_core/firebase_core.dart';
-import 'package:modsen_practice/presentation/blocs/login_register_bloc.dart';
 import 'package:modsen_practice/presentation/pages/example_page.dart';
 import 'package:modsen_practice/presentation/pages/login_register_page.dart';
 import 'package:modsen_practice/presentation/pages/welcome_page.dart';
-import 'data/repository/user_repo.dart';
+
 import 'package:go_router/go_router.dart';
 
 part 'router.dart';
@@ -28,6 +28,9 @@ class Log extends Logger {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await IsarUserDbSource.openUserDb();
+
   runApp (MyApp());
 }
 
@@ -40,12 +43,10 @@ class MyApp extends StatelessWidget {
       // create: (BuildContext context) => ExampleCubit(ConcreteExampleRepo(Dio())),
       providers: [
         BlocProvider(create: (BuildContext context) => ExampleCubit(ConcreteExampleRepo(Dio()))),
-        BlocProvider(create: (BuildContext context) => LoginRegisterBloc()),
+        //BlocProvider(create: (BuildContext context) => LoginRegisterBloc()),
         BlocProvider(create: (BuildContext context) {
           final dbSource = IsarUserDbSource();
-          dbSource.init();
-          final loginSource = FirebaseLoginSource();
-          final repo = UserRepo(dbSource,loginSource);
+          final repo = UserRepo(dbSource);
           return AuthCubit(repo);
         }),
       ],

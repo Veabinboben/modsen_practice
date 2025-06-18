@@ -1,25 +1,30 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+
+import '../../data/models/user_model.dart';
+import '../../domain/repository/abstract_login_register_repo.dart';
 //import 'package:modsen_practice/data/models/user_model.dart';
-//import 'package:modsen_practice/domain/repository/abstract_user_repo.dart';
+//import 'package:modsen_practice/domain/repository/abstract_login_register_repo.dart';
 
 part 'login_register_events.dart';
 
 part 'login_register_state.dart';
 
 class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
-  LoginRegisterBloc()
+  LoginRegisterBloc(AbstractLoginRegisterRepo repo)
     :
+      _repo = repo,
       super(NotLoggedInState()) {
     on<TryLogInEvent>(_tryLogInEvent,transformer: sequential());
     on<TryRegisterEvent>(_tryRegisterEvent,transformer: sequential());
-    on<StartWaitingEvent>(_startWaitingEvent,transformer: sequential());
-    on<FinalizeLogInEvent>(_finalizeLogInEvent,transformer: sequential());
-    on<FinalizeRegisterEvent>(_finalizeRegisterEvent,transformer: sequential());
+    // on<StartWaitingEvent>(_startWaitingEvent,transformer: sequential());
+    // on<FinalizeLogInEvent>(_finalizeLogInEvent,transformer: sequential());
+    // on<FinalizeRegisterEvent>(_finalizeRegisterEvent,transformer: sequential());
     //on<TryQuickLogInEvent>(_tryQuickLogInEvent,transformer: sequential());
     //on<TryLogOutEvent>(_tryLogOutEvent,transformer: sequential());
   }
 
+  late final AbstractLoginRegisterRepo _repo;
 
   //Template
   //_name(Event event, Emitter<LoginState> emitter) async{
@@ -41,26 +46,14 @@ class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
       emitter(InvalidFormState());
       return;
     }
-    emitter(TryingLogInState());
-    //emitter(WaitingReplyState());
-    // final result = await _repo.login(User(event.email, event.password));
-    // if (result == true)
-    //   emitter(SuccessfulLogInState());
-    // else
-    //   emitter(FailedLogInState());
+    emitter(WaitingReplyState());
+    final result = await _repo.login(User(event.email, event.password));
+    if (result == true)
+      emitter(SuccessfulLogInState());
+    else
+      emitter(FailedLogInState());
   }
 
-  Future<void> _finalizeLogInEvent(
-      FinalizeLogInEvent event,
-      Emitter<LoginRegisterState> emitter,
-      ) async {
-    if(event.success == true){
-      emitter(SuccessfulLogInState());
-    }
-    else{
-      emitter(FailedLogInState());
-    }
-  }
 
 
   Future<void> _tryRegisterEvent(
@@ -71,34 +64,14 @@ class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
       emitter(InvalidFormState());
       return;
     }
-    emitter(TryingRegisterState());
-    // emitter(WaitingReplyState());
-    // final result = await _repo.register(User(event.email, event.password));
-    // if (result == true)
-    //   emitter(SuccessfulRegisterState());
-    // else
-    //   emitter(FailedLogInState());
-  }
-
-  Future<void> _finalizeRegisterEvent(
-      FinalizeRegisterEvent event,
-      Emitter<LoginRegisterState> emitter,
-      ) async {
-    if(event.success == true){
-      emitter(SuccessfulRegisterState());
-    }
-    else{
-      emitter(FailedRegisterState());
-    }
-  }
-
-
-  Future<void> _startWaitingEvent(
-      StartWaitingEvent event,
-      Emitter<LoginRegisterState> emitter,
-      ) async {
     emitter(WaitingReplyState());
+    final result = await _repo.register(User(event.email, event.password));
+    if (result == true)
+      emitter(SuccessfulRegisterState());
+    else
+      emitter(FailedLogInState());
   }
+
 
   // Future<void> _tryQuickLogInEvent(
   //     TryQuickLogInEvent event,

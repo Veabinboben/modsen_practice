@@ -3,17 +3,21 @@ import 'package:flashy_flushbar/flashy_flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:modsen_practice/data/sources/remote_login.dart';
 import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/login_register_bloc.dart';
 import 'package:modsen_practice/presentation/widgets/loading_overlay.dart';
 
 import '../../data/models/user_model.dart';
+import '../../data/repository/login_register_repo.dart';
 
 class LoginRegisterPage extends StatelessWidget {
   LoginRegisterPage({this.isLogin = true,super.key});
 
   final bool isLogin;
-  late final LoginRegisterBloc bloc;
+  // TODO maybe init differently
+  final LoginRegisterBloc bloc = LoginRegisterBloc(LoginRegisterRepo(FirebaseLoginSource()));
   late final AuthCubit authCubit;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
@@ -82,7 +86,7 @@ class LoginRegisterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: probably should place it in some other place,
     //  maybe init state (so convert to stfl)
-    bloc = BlocProvider.of<LoginRegisterBloc>(context);
+
     authCubit = BlocProvider.of<AuthCubit>(context);
 
     final String appBarText = isLogin == true? 'Log In' : 'Register';
@@ -95,16 +99,7 @@ class LoginRegisterPage extends StatelessWidget {
       listener: (context,state){
         switch (state){
           case LoggedInState():
-            bloc.add(FinalizeLogInEvent(true));
-            break;
-          case RegisteredState():
-            bloc.add(FinalizeRegisterEvent(true));
-            break;
-          case LogInFailedState():
-            bloc.add(FinalizeLogInEvent(false));
-            break;
-          case RegisterFailedState():
-            bloc.add(FinalizeRegisterEvent(false));
+            context.go('/test');
             break;
         }
       },
@@ -118,18 +113,11 @@ class LoginRegisterPage extends StatelessWidget {
             LoadingOverlay.hide();
           }
           switch (state) {
-            case TryingLogInState():
-              bloc.add(StartWaitingEvent());
-              authCubit.login(User(_emailController.text,
-                _passwordController.text,));
-              break;
-            case TryingRegisterState():
-              bloc.add(StartWaitingEvent());
-              authCubit.register(User(_emailController.text,
-                _passwordController.text,));
-              break;
             case SuccessfulLogInState():
-              context.go('/test');
+              // context.go('/test');
+              final user = User(_emailController.text,
+                _passwordController.text);
+              authCubit.login(user);
               break;
             case SuccessfulRegisterState():
               flushbar('Successful Registration!, try logging in now',context).show();
