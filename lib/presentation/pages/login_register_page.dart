@@ -123,7 +123,7 @@ class LoginRegisterPage extends StatelessWidget {
               authCubit.login(User(_emailController.text,
                 _passwordController.text,));
               break;
-              case TryingRegisterState():
+            case TryingRegisterState():
               bloc.add(StartWaitingEvent());
               authCubit.register(User(_emailController.text,
                 _passwordController.text,));

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:modsen_practice/data/repository/concrete_example_repo.dart';
-import 'package:modsen_practice/data/sources/local_db.dart';
+import 'package:modsen_practice/data/sources/local_user_db.dart';
 import 'package:modsen_practice/data/sources/remote_login.dart';
 import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/example_cubit.dart';
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => ExampleCubit(ConcreteExampleRepo(Dio()))),
         BlocProvider(create: (BuildContext context) => LoginRegisterBloc()),
         BlocProvider(create: (BuildContext context) {
-          final dbSource = IsarDbSource();
+          final dbSource = IsarUserDbSource();
           dbSource.init();
           final loginSource = FirebaseLoginSource();
           final repo = UserRepo(dbSource,loginSource);

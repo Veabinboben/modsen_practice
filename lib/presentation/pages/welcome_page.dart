@@ -58,13 +58,14 @@ class _WelcomePageState extends State<WelcomePage>
                 context.go('/test');
                 break;
               case LogInFailedState():
-                logger.e("Wont quick login, no biometry");
+                logger.e("Wont quick login");
                 break;
               default:
                 break;
             }
           },
           child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
             child: Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
@@ -80,6 +81,7 @@ class _WelcomePageState extends State<WelcomePage>
                     child: Container(
                       height: _moveAnimation.value,
                       child: SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
                         child: Column(
                           spacing: 10,
                         children: [

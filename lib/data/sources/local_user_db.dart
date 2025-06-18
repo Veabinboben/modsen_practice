@@ -4,14 +4,14 @@ import 'package:path_provider/path_provider.dart';
 
 import '../models/user_model.dart';
 
-abstract class AbstractLocalDbSource{
+abstract class AbstractLocalUserDbSource{
   Future<User?> getUserFormDb(int id);
   Future<void> saveUserToDb(User user,int id);
   Future<void> deleteUserFromDb();
 }
 
-class IsarDbSource extends AbstractLocalDbSource{
-  IsarDbSource();
+class IsarUserDbSource extends AbstractLocalUserDbSource{
+  IsarUserDbSource();
 
   Future<void> init() async {
     final dir = await getApplicationDocumentsDirectory();

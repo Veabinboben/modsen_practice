@@ -5,12 +5,12 @@ import 'package:modsen_practice/data/sources/remote_login.dart';
 import 'package:modsen_practice/domain/repository/abstract_user_repo.dart';
 import 'package:modsen_practice/main.dart';
 
-import '../sources/local_db.dart';
+import '../sources/local_user_db.dart';
 
 class UserRepo extends AbstractUserRepo{
-  UserRepo(AbstractLocalDbSource localSource, AbstractLoginSource remoteLogin) : _localSource = localSource, _remoteLogin = remoteLogin;
+  UserRepo(AbstractLocalUserDbSource localSource, AbstractLoginSource remoteLogin) : _localSource = localSource, _remoteLogin = remoteLogin;
 
-  late final AbstractLocalDbSource _localSource;
+  late final AbstractLocalUserDbSource _localSource;
   late final AbstractLoginSource _remoteLogin;
   final LocalAuthentication _localauth = LocalAuthentication();
   final int _userId = 1;
