@@ -4,13 +4,13 @@ import 'package:path_provider/path_provider.dart';
 
 import '../models/user_model.dart';
 
-abstract class AbstractLocalUserDbSource{
+abstract interface class AbstractLocalUserDbSource{
   Future<User?> getUserFormDb(int id);
   Future<void> saveUserToDb(User user,int id);
   Future<void> deleteUserFromDb();
 }
 
-class IsarUserDbSource extends AbstractLocalUserDbSource{
+class IsarUserDbSource implements AbstractLocalUserDbSource{
   IsarUserDbSource(){
     try {
       _isar = Isar.getInstance("UserDb");

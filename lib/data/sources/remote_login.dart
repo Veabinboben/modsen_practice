@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modsen_practice/main.dart';
 
-abstract class AbstractLoginSource{
+abstract interface class AbstractLoginSource{
   Future<bool> registerUser(String email, String password);
   Future<bool> loginUser(String email, String password);
   Future<bool> logoutUser();
 }
 
-class FirebaseLoginSource extends AbstractLoginSource{
+class FirebaseLoginSource implements AbstractLoginSource{
 
   FirebaseLoginSource(){
     _auth = FirebaseAuth.instance;

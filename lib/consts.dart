@@ -1,0 +1,1 @@
+const apiKeyNameConst = "x-cg-pro-api-key";

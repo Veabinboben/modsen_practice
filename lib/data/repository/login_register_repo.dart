@@ -4,7 +4,7 @@ import 'package:modsen_practice/data/sources/remote_login.dart';
 import 'package:modsen_practice/domain/repository/abstract_login_register_repo.dart';
 
 
-class LoginRegisterRepo extends AbstractLoginRegisterRepo{
+class LoginRegisterRepo implements  AbstractLoginRegisterRepo{
   LoginRegisterRepo(AbstractLoginSource remoteLogin) : _remoteLogin = remoteLogin;
 
   late final AbstractLoginSource _remoteLogin;

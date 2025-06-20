@@ -1,6 +1,6 @@
 import 'package:modsen_practice/data/models/user_model.dart';
 
-abstract class AbstractLoginRegisterRepo {
+abstract interface class AbstractLoginRegisterRepo {
   // Future<User?> getUser();
   // Future<void> saveUser(User user);
   Future<bool> login(User user);

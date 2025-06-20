@@ -1,3 +1,3 @@
-abstract class AbstractBiometryRepo{
+abstract interface class AbstractBiometryRepo{
   Future<bool> authUsingBiometry();
 }

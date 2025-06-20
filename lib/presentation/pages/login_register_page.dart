@@ -99,7 +99,7 @@ class LoginRegisterPage extends StatelessWidget {
       listener: (context,state){
         switch (state){
           case LoggedInState():
-            context.go('/test');
+            context.go('/cryptoList');
             break;
         }
       },

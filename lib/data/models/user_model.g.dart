@@ -80,8 +80,8 @@ User _userDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = User(
-    reader.readStringOrNull(offsets[1]),
     reader.readStringOrNull(offsets[0]),
+    reader.readStringOrNull(offsets[1]),
   );
   object.id = id;
   return object;

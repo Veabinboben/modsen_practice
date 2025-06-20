@@ -2,7 +2,7 @@ import 'package:modsen_practice/data/models/user_model.dart';
 import 'package:modsen_practice/data/sources/local_user_db.dart';
 import 'package:modsen_practice/domain/repository/abstract_user_repo.dart';
 
-class UserRepo extends AbstractUserRepo{
+class UserRepo implements AbstractUserRepo{
   UserRepo(AbstractLocalUserDbSource source) : _source = source;
 
   late final AbstractLocalUserDbSource _source;

@@ -15,8 +15,8 @@ class LoginRegisterBloc extends Bloc<LoginRegisterEvent, LoginRegisterState> {
     :
       _repo = repo,
       super(NotLoggedInState()) {
-    on<TryLogInEvent>(_tryLogInEvent,transformer: sequential());
-    on<TryRegisterEvent>(_tryRegisterEvent,transformer: sequential());
+    on<TryLogInEvent>(_tryLogInEvent,transformer: droppable());
+    on<TryRegisterEvent>(_tryRegisterEvent,transformer: droppable());
     // on<StartWaitingEvent>(_startWaitingEvent,transformer: sequential());
     // on<FinalizeLogInEvent>(_finalizeLogInEvent,transformer: sequential());
     // on<FinalizeRegisterEvent>(_finalizeRegisterEvent,transformer: sequential());

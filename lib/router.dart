@@ -1,7 +1,8 @@
 part of "main.dart";
 
 final GoRouter _router = GoRouter(
-  initialLocation: '/welcome',
+  //FIXME change back to '/welcome'
+  initialLocation: '/cryptoList',
   routes: [
     StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
@@ -34,6 +35,14 @@ final GoRouter _router = GoRouter(
                   path: '/register',
                   builder: (context, state) {
                     return LoginRegisterPage(isLogin: false,);
+                  },
+                  routes: []
+              ),
+              GoRoute(
+                  name: 'crypto list',
+                  path: '/cryptoList',
+                  builder: (context, state) {
+                    return CryptoListPage();
                   },
                   routes: []
               ),
