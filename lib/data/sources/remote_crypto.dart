@@ -21,6 +21,7 @@ abstract class RemoteCryptoSource {
         @Query('per_page') int per_page = 100,
         @Query('page') int page = 1,
         @Query('locale') String locale = 'en',
+        @Query('price_change_percentage') String priceChangePercentageTimeframe = '24h',
       }
       );
 }

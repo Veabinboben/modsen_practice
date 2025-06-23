@@ -5,6 +5,22 @@ import 'package:modsen_practice/main.dart';
 
 import '../../domain/repository/abstract_crypto_repo.dart';
 
+
+
+const List<String> _periods = [
+  '1h',
+  '24h',
+  '7d',
+  '14d',
+  '30d',
+  '200d',
+  '1y'
+];
+
+String getValue(PriceChangePercentageTimeframes timeframe){
+  return _periods[timeframe.index];
+}
+
 class CryptoRepo implements AbstractCryptoRepo{
   CryptoRepo(RemoteCryptoSource source,String apiKey) : _source = source, _apikey = apiKey;
   final RemoteCryptoSource _source;
@@ -34,9 +50,10 @@ class CryptoRepo implements AbstractCryptoRepo{
     }
   }
 
-  Future<List<Coin>> coinsListMarketData() async {
+  @override
+  Future<List<Coin>> coinsListMarketData({int page = 1,PriceChangePercentageTimeframes timeframe = PriceChangePercentageTimeframes.twentyFourHours}) async {
     try{
-      final res = await _source.coinsListWithMarketData(_apikey);
+      final res = await _source.coinsListWithMarketData(_apikey,page: page,priceChangePercentageTimeframe: getValue(timeframe));
       return res;
     }
     on DioException catch (e){

@@ -9,27 +9,46 @@ class Coin{
   String? symbol;
   String? name;
   String? image;
-  int? currentPrice;
-  int? marketCap;
+  @JsonKey(name: "current_price")
+  double? currentPrice;
+  @JsonKey(name: "market_cap")
+  double? marketCap;
+  @JsonKey(name: "market_cap_rank")
   int? marketCapRank;
+  @JsonKey(name: "fully_diluted_valuation")
   int? fullyDilutedValuation;
+  @JsonKey(name: "total_volume")
   int? totalVolume;
-  int? high24h;
-  int? low24h;
+  @JsonKey(name: "high_24h")
+  double? high24h;
+  @JsonKey(name: "low_24h")
+  double? low24h;
+  @JsonKey(name: "price_change_24h")
   double? priceChange24h;
+  @JsonKey(name: "price_change_percentage_24h")
   double? priceChangePercentage24h;
-  int? marketCapChange24h;
+  @JsonKey(name: "market_cap_change_24h")
+  double? marketCapChange24h;
+  @JsonKey(name: "market_cap_change_percentage_24h")
   double? marketCapChangePercentage24h;
-  int? circulatingSupply;
-  int? totalSupply;
-  int? maxSupply;
-  int? ath;
+  @JsonKey(name: "circulating_supply")
+  double? circulatingSupply;
+  @JsonKey(name: "total_supply")
+  double? totalSupply;
+  @JsonKey(name: "max_supply")
+  double? maxSupply;
+  double? ath;
+  @JsonKey(name: "ath_change_percentage")
   double? athChangePercentage;
+  @JsonKey(name: "ath_date")
   String? athDate;
   double? atl;
+  @JsonKey(name: "atl_change_percentage")
   double? atlChangePercentage;
+  @JsonKey(name: "atl_date")
   String? atlDate;
   Map<String,dynamic>? roi;
+  @JsonKey(name: "lastUpdated")
   String? lastUpdated;
   //TODO make another class
   String? platforms;

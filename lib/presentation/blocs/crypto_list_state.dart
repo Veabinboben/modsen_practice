@@ -8,14 +8,14 @@ class EmptyListState extends CryptoListState{
   const EmptyListState() : super();
 }
 
-class TestState extends CryptoListState{
-  String pingresp;
-  TestState(this.pingresp) : super();
+class WaitingListState extends CryptoListState{
+  const WaitingListState() : super();
 }
 
 class GotListState extends CryptoListState{
   List<Coin> coins;
-  GotListState(this.coins) : super();
+  int page;
+  GotListState(this.coins,this.page) : super();
 }
 
 

@@ -1,13 +1,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modsen_practice/data/repository/biometry_repo.dart';
-import 'package:modsen_practice/data/repository/user_repo.dart';
-import 'package:modsen_practice/data/sources/local_user_db.dart';
+import 'package:modsen_practice/domain/repository/abstract_biometry_repo.dart';
+
 import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
 import 'package:modsen_practice/presentation/blocs/quick_login_cubit.dart';
 
+import '../../domain/repository/abstract_user_repo.dart';
 import '../../main.dart';
 
 
@@ -25,7 +26,8 @@ class _WelcomePageState extends State<WelcomePage>
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
   late final AuthCubit authCubit;
-  final QuickLoginCubit cubit = QuickLoginCubit(UserRepo(IsarUserDbSource()), BiometryRepo());
+  final getIt = GetIt.instance;
+  late final QuickLoginCubit cubit = QuickLoginCubit(getIt.get<AbstractUserRepo>(), getIt.get<AbstractBiometryRepo>());
 
   @override
   void initState() {
@@ -71,7 +73,7 @@ class _WelcomePageState extends State<WelcomePage>
             listener: (context,state){
               switch (state){
                 case LoggedInState():
-                  context.go('/cryptoList');
+                  context.go('/crypto/list');
                   break;
                 case LoggedOutState():
                   logger.e("Wont quick login");

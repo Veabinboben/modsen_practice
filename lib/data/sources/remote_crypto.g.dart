@@ -98,6 +98,7 @@ class _RemoteCryptoSource implements RemoteCryptoSource {
     int per_page = 100,
     int page = 1,
     String locale = 'en',
+    String priceChangePercentageTimeframe = '24h',
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -106,6 +107,7 @@ class _RemoteCryptoSource implements RemoteCryptoSource {
       r'per_page': per_page,
       r'page': page,
       r'locale': locale,
+      r'price_change_percentage': priceChangePercentageTimeframe,
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
