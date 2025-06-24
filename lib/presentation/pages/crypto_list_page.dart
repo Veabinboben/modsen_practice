@@ -52,7 +52,7 @@ class CryptoListPage extends StatelessWidget {
                   itemCount: state.coins.length+1,
                   itemBuilder: (context, index) {
                     if(index == state.coins.length){
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     }
                     final item = state.coins[index];
                     return CryptoListTile(item);

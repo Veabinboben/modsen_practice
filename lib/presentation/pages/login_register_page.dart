@@ -158,53 +158,60 @@ class LoginRegisterPage extends StatelessWidget {
               ),
               body: SingleChildScrollView(
                 reverse: true,
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 85,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10,),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(welcomeText, style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                        ),),
-                      ),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Enter your email adress'
+                child: Builder(
+                  builder: (context) {
+                    final height = MediaQuery.of(context).size.height - Scaffold.of(context).appBarMaxHeight!-50;
+                    return Container(
+                      //TODO test
+                      height: height,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //SizedBox(height: 10,),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(welcomeText, style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40,
+                            ),),
                           ),
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          //autovalidateMode: AutovalidateMode.always,
-                          validator: emailValidator,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                              hintText: 'Enter password'
+                          const Spacer(),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              decoration: const InputDecoration(
+                                  hintText: 'Enter your email adress'
+                              ),
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              //autovalidateMode: AutovalidateMode.always,
+                              validator: emailValidator,
+                            ),
                           ),
-                          controller: _passwordController,
-                          keyboardType: TextInputType.visiblePassword,
-                          //autovalidateMode: AutovalidateMode.always,
-                          validator: passwordValidator,
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                  hintText: 'Enter password'
+                              ),
+                              controller: _passwordController,
+                              keyboardType: TextInputType.visiblePassword,
+                              //autovalidateMode: AutovalidateMode.always,
+                              validator: passwordValidator,
+                            ),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            onTap: buttonAction,
+                            child: Ink(height: 50, color: Colors.blue,
+                              child: Center(child: Text(appBarText)),),
+                          ),
+                        ],
                       ),
-                      const Spacer(),
-                      InkWell(
-                        onTap: buttonAction,
-                        child: Ink(height: 50, color: Colors.blue,
-                          child: Center(child: Text(appBarText)),),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ),

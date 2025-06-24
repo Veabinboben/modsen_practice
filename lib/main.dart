@@ -21,6 +21,7 @@ import 'package:modsen_practice/presentation/pages/login_register_page.dart';
 import 'package:modsen_practice/presentation/pages/welcome_page.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:modsen_practice/presentation/widgets/nav_bar.dart';
 
 import 'data/repository/biometry_repo.dart';
 import 'data/repository/crypto_repo.dart';
@@ -115,9 +116,13 @@ class NavScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final route = GoRouter.of(context).routerDelegate.currentConfiguration.uri;
     return SafeArea(
       child: Scaffold(
         body: navigationShell,
+        bottomNavigationBar: route.path.contains('/crypto') ?
+        NavBar():
+        SizedBox(height: 0,),
       ),
     );
   }
