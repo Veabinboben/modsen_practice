@@ -55,6 +55,7 @@ dependencies:
   flutter_dotenv:  any
   cached_network_image: any
   get_it: any
+  fl_chart: any
 
 
   # The following adds the Cupertino Icons font to your application.
