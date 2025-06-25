@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:modsen_practice/data/models/chart_DTO.dart';
 import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:modsen_practice/consts.dart';
@@ -23,5 +24,14 @@ abstract class RemoteCryptoSource {
         @Query('locale') String locale = 'en',
         @Query('price_change_percentage') String priceChangePercentageTimeframe = '24h',
       }
+      );
+  @GET('/coins/{id}/market_chart')
+  Future<ChartDTO> coinChartData(
+      @Query(apiKeyNameConst) String apiKey,
+      @Path() String id,
+        {
+          @Query('vs_currency') String vs_currency = 'usd',
+          @Query('days') String days = '30',
+        }
       );
 }

@@ -140,6 +140,48 @@ class _RemoteCryptoSource implements RemoteCryptoSource {
     return _value;
   }
 
+  @override
+  Future<ChartDTO> coinChartData(
+    String apiKey,
+    String id, {
+    String vs_currency = 'usd',
+    String days = '30',
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'x-cg-pro-api-key': apiKey,
+      r'vs_currency': vs_currency,
+      r'days': days,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ChartDTO>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/coins/${id}/market_chart',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ChartDTO _value;
+    try {
+      _value = ChartDTO.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||
