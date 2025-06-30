@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modsen_practice/domain/repository/abstract_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_local_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_remote_crypto_repo.dart';
 import 'package:modsen_practice/presentation/blocs/crypto_chart_cubit.dart';
 import 'package:modsen_practice/presentation/widgets/currency_chart.dart';
 
@@ -16,7 +17,10 @@ class CryptoChartPage extends StatelessWidget {
 
   final Coin coin;
   final getIt = GetIt.instance;
-  late final CryptoChartCubit _cubit = CryptoChartCubit(getIt.get<AbstractCryptoRepo>());
+  late final CryptoChartCubit _cubit = CryptoChartCubit(
+      getIt.get<AbstractRemoteCryptoRepo>(),
+      getIt.get<AbstractLocalCryptoRepo>(),
+  );
   
   @override
   Widget build(BuildContext context) {

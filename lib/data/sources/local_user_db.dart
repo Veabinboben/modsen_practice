@@ -13,7 +13,7 @@ abstract interface class AbstractLocalUserDbSource{
 class IsarUserDbSource implements AbstractLocalUserDbSource{
   IsarUserDbSource(){
     try {
-      _isar = Isar.getInstance("UserDb");
+      _isar = Isar.getInstance(_dbName);
       logger.i("'Isar by the name of $_dbName is opened!");
     }
     catch (e){

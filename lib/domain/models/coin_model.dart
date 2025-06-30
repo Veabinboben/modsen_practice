@@ -1,10 +1,13 @@
+import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'coin_model.g.dart';
 
 //TODO maybe move to "data"
+@collection
 @JsonSerializable()
 class Coin{
+  Id? isarId = Isar.autoIncrement;
   String? id;
   String? symbol;
   String? name;
@@ -47,7 +50,6 @@ class Coin{
   double? atlChangePercentage;
   @JsonKey(name: "atl_date")
   String? atlDate;
-  Map<String,dynamic>? roi;
   @JsonKey(name: "lastUpdated")
   String? lastUpdated;
   //TODO make another class
@@ -60,7 +62,7 @@ class Coin{
       this.priceChangePercentage24h, this.marketCapChange24h,
       this.marketCapChangePercentage24h, this.circulatingSupply,
       this.totalSupply, this.maxSupply, this.ath, this.athChangePercentage,
-      this.athDate, this.atl, this.atlChangePercentage, this.atlDate, this.roi,
+      this.athDate, this.atl, this.atlChangePercentage, this.atlDate,
       this.lastUpdated, this.platforms);
 
   factory Coin.fromJson(Map<String, dynamic> json) =>

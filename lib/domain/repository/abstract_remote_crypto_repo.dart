@@ -10,7 +10,7 @@ enum PriceChangePercentageTimeframes {
   oneYear,
 }
 
-abstract interface class AbstractCryptoRepo{
+abstract interface class AbstractRemoteCryptoRepo{
   Future<String> test();
   Future<List<Coin>> coinsListIdMap();
   Future<List<Coin>> coinsListMarketData({int page = 1,PriceChangePercentageTimeframes timeframe = PriceChangePercentageTimeframes.twentyFourHours});

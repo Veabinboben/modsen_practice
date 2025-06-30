@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:modsen_practice/domain/repository/abstract_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_local_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_remote_crypto_repo.dart';
 import 'package:modsen_practice/presentation/blocs/crypto_list_cubit.dart';
 import 'package:modsen_practice/presentation/widgets/crypto_list_tile.dart';
 
@@ -18,7 +19,8 @@ class CryptoListPage extends StatelessWidget {
   }
   final getIt = GetIt.instance;
   late final cubit = CryptoListCubit(
-    getIt.get<AbstractCryptoRepo>()
+    getIt.get<AbstractRemoteCryptoRepo>(),
+    getIt.get<AbstractLocalCryptoRepo>()
   );
   final ScrollController _scrollController = ScrollController();
 
@@ -54,6 +56,16 @@ class CryptoListPage extends StatelessWidget {
                     if(index == state.coins.length){
                       return Center(child: CircularProgressIndicator());
                     }
+                    final item = state.coins[index];
+                    return CryptoListTile(item);
+                  },
+                ),
+              );
+            case GotLocalSnapshotState():
+              return Container(
+                child: ListView.builder(
+                  itemCount: state.coins.length,
+                  itemBuilder: (context, index) {
                     final item = state.coins[index];
                     return CryptoListTile(item);
                   },

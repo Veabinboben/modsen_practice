@@ -18,4 +18,9 @@ class GotListState extends CryptoListState{
   GotListState(this.coins,this.page) : super();
 }
 
+class GotLocalSnapshotState extends CryptoListState{
+  List<Coin> coins;
+  GotLocalSnapshotState(this.coins) : super();
+}
+
 

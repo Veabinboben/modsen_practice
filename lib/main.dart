@@ -5,11 +5,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:modsen_practice/data/repository/concrete_example_repo.dart';
+import 'package:modsen_practice/data/repository/local_crypto_repo.dart';
 import 'package:modsen_practice/data/repository/user_repo.dart';
+import 'package:modsen_practice/data/sources/local_charts_db.dart';
+import 'package:modsen_practice/data/sources/local_coins_db.dart';
 import 'package:modsen_practice/data/sources/local_user_db.dart';
 import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:modsen_practice/domain/repository/abstract_biometry_repo.dart';
-import 'package:modsen_practice/domain/repository/abstract_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_local_crypto_repo.dart';
+import 'package:modsen_practice/domain/repository/abstract_remote_crypto_repo.dart';
 import 'package:modsen_practice/domain/repository/abstract_login_register_repo.dart';
 
 import 'package:modsen_practice/presentation/blocs/auth_cubit.dart';
@@ -26,7 +30,7 @@ import 'package:go_router/go_router.dart';
 import 'package:modsen_practice/presentation/widgets/nav_bar.dart';
 
 import 'data/repository/biometry_repo.dart';
-import 'data/repository/crypto_repo.dart';
+import 'data/repository/remote_crypto_repo.dart';
 import 'data/repository/login_register_repo.dart';
 import 'data/sources/remote_crypto.dart';
 import 'data/sources/remote_login.dart';
@@ -44,15 +48,20 @@ class Log extends Logger {
 
 Future<void> setup() async {
   await IsarUserDbSource.openUserDb();
-  final dbSource =  IsarUserDbSource();
+  await IsarCoinsDbSource.openCoinsDb();
+  await IsarChartsDbSource.openChartsDb();
+  final userDbSource =  IsarUserDbSource();
+  final coinsDbSource =  IsarCoinsDbSource();
+  final chartsDbSource =  IsarChartsDbSource();
   final _key = dotenv.env['APIKEY'];
   if (_key == null){
     logger.e("INVALID APIKEY");
   }
-  getIt..registerSingleton<AbstractUserRepo>(UserRepo(dbSource))
+  getIt..registerSingleton<AbstractUserRepo>(UserRepo(userDbSource))
   ..registerSingleton<AbstractLoginRegisterRepo>(LoginRegisterRepo(FirebaseLoginSource()))
   ..registerSingleton<AbstractBiometryRepo>(BiometryRepo())
-  ..registerSingleton<AbstractCryptoRepo>(CryptoRepo(RemoteCryptoSource(Dio()), _key!));
+  ..registerSingleton<AbstractRemoteCryptoRepo>(RemoteCryptoRepo(RemoteCryptoSource(Dio()), _key!))
+  ..registerSingleton<AbstractLocalCryptoRepo>(LocalCryptoRepo(coinsDbSource, chartsDbSource));
 }
 
 Future<void> main() async {

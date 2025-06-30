@@ -3,7 +3,7 @@ import 'package:modsen_practice/data/sources/remote_crypto.dart';
 import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:modsen_practice/main.dart';
 
-import '../../domain/repository/abstract_crypto_repo.dart';
+import '../../domain/repository/abstract_remote_crypto_repo.dart';
 
 
 
@@ -21,8 +21,8 @@ String getValue(PriceChangePercentageTimeframes timeframe){
   return _periods[timeframe.index];
 }
 
-class CryptoRepo implements AbstractCryptoRepo{
-  CryptoRepo(RemoteCryptoSource source,String apiKey) : _source = source, _apikey = apiKey;
+class RemoteCryptoRepo implements AbstractRemoteCryptoRepo{
+  RemoteCryptoRepo(RemoteCryptoSource source,String apiKey) : _source = source, _apikey = apiKey;
   final RemoteCryptoSource _source;
   final String _apikey;
   @override

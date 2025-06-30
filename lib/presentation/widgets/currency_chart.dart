@@ -82,7 +82,14 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
       isCurved: false,
       color: color,
       dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(show: false),
+      belowBarData: BarAreaData(
+          show: true,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+              colors: [
+            color, Colors.transparent
+          ])
+      ),
     );
   }
 
@@ -98,7 +105,8 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
           lerpDouble(_spots[count].y, _spots[next].y, animProcexs)!);
       spots.add(interpolated);
     }
-    final bardat = _getBarData(spots,Colors.red);
+    final color = (_spots.last.y - _spots.first.y) < 0 ? Colors.red : Colors.green;
+    final bardat = _getBarData(spots,color);
     return [bardat];
   }
 
