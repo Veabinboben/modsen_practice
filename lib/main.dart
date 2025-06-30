@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:modsen_practice/data/repository/concrete_example_repo.dart';
 import 'package:modsen_practice/data/repository/user_repo.dart';
 import 'package:modsen_practice/data/sources/local_user_db.dart';
+import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:modsen_practice/domain/repository/abstract_biometry_repo.dart';
 import 'package:modsen_practice/domain/repository/abstract_crypto_repo.dart';
 import 'package:modsen_practice/domain/repository/abstract_login_register_repo.dart';

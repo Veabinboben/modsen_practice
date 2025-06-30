@@ -1,157 +1,97 @@
-import 'dart:ui';
-
-import 'package:fl_chart/fl_chart.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:modsen_practice/main.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:modsen_practice/domain/repository/abstract_crypto_repo.dart';
+import 'package:modsen_practice/presentation/blocs/crypto_chart_cubit.dart';
+import 'package:modsen_practice/presentation/widgets/currency_chart.dart';
 
-class CryptoChartPage extends StatefulWidget {
-  const CryptoChartPage({super.key});
+import '../../domain/models/coin_model.dart';
+import '../../main.dart';
+import '../widgets/coin_data.dart';
 
-  @override
-  State<CryptoChartPage> createState() => _CryptoChartPageState();
-}
+class CryptoChartPage extends StatelessWidget {
+  CryptoChartPage({required this.coin,super.key});
 
-class _CryptoChartPageState extends State<CryptoChartPage> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  final List<FlSpot> _spots = [
-    FlSpot(0, 1),
-    FlSpot(1, 3),
-    FlSpot(2, 2),
-    FlSpot(3, 5),
-    FlSpot(4, 4),
-    FlSpot(5, 6),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 5),
-      vsync: this,
-    );
-
-    _animation = Tween<double>(begin: 0, end: _spots.length.toDouble()-1).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.linear))
-      ..addListener(() {
-        setState(() {
-          _Animlines = _updateLines().toList();
-        });
-      });
-
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  List<LineChartBarData> _Animlines = [];
-  int prevVal = -1;
-  bool needToFinalizeLine = false;
-
-
-  LineChartBarData _getBarData(List<FlSpot> spots, Color color ) {
-    return LineChartBarData(
-      spots: spots,
-      isCurved: true,
-      color: color,
-      dotData: FlDotData(show: false),
-      belowBarData: BarAreaData(show: false),
-    );
-  }
-
-  List <LineChartBarData> _updateLines() {
-    List <LineChartBarData> _lines = [];
-    int count = _animation.value.floor().toInt();
-    int next = _animation.value.ceil().toInt();
-    double animProcexs = _animation.value - count;
-    final diff = _spots.length - count;
-    int i = 0;
-    for (i ; i < count;i++){
-      final spots = _spots.sublist(i, i+2);
-      final bardat = _getBarData(spots, Colors.red);
-      _lines.add(bardat);
-    }
-    if (diff != 0){
-      final spots = _spots.sublist(i, i+1);
-      final FlSpot interpolated = FlSpot(
-          lerpDouble(_spots[count].x, _spots[next].x, animProcexs)!,
-          lerpDouble(_spots[count].y, _spots[next].y, animProcexs)!);
-      spots.add(interpolated);
-
-      final bardat = _getBarData(spots, Colors.red);
-      _lines.add(bardat);
-    }
-
-    logger.i(_lines);
-    return _lines;
-  }
-
+  final Coin coin;
+  final getIt = GetIt.instance;
+  late final CryptoChartCubit _cubit = CryptoChartCubit(getIt.get<AbstractCryptoRepo>());
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Smooth Animated Line Chart')),
-      body: Center(
-        child: LineChart(
-          LineChartData(
-
-            gridData: FlGridData(show: false),
-            titlesData: FlTitlesData(show: true),
-            borderData: FlBorderData(show: true),
-            minX: 0,
-            maxX: _spots.length.toDouble(),
-            minY: 0,
-            maxY: 7,
-            lineBarsData: _Animlines,
-            //TODO change tooltip here
-            lineTouchData: LineTouchData(
-                enabled: true,
-                touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (_) => Colors.black26,
-                    getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                      final tooltipItems = <LineTooltipItem?>[];
-                      for (int i = 0; i < touchedSpots.length; i++) {
-                        if (i >= 1) {
-                          tooltipItems.add(null);
-                          continue;
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(onPressed: (){
+          context.pop();
+        }, icon: const Icon(Icons.arrow_back)),
+        title:  Container(
+            child: Text(coin.name.toString())
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Builder(
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.all(10),
+              height: MediaQuery.of(context).size.height-Scaffold.of(context).appBarMaxHeight!-110,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(coin.currentPrice.toString(), style: TextStyle(fontSize: 30),),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: CachedNetworkImage(imageUrl: coin.image!, width: 40),
+                      )
+                    ],
+                  ),
+                  Container(
+                    color: Colors.black87,
+                    height: 300,
+                    child: BlocBuilder(
+                        bloc: _cubit..getChartData(coin.id!),
+                        builder: (context, state){
+                          if (state is GotChartDataState){
+                            logger.i(state.data);
+                            return CryptoChart(state.data);
+                          }
+                          else{
+                            return Center(child: CircularProgressIndicator(),);
+                          }
                         }
-                        final spot = touchedSpots[i];
-                        tooltipItems.add(LineTooltipItem(
-                          spot.y.toString(),
-                          TextStyle(color: Colors.white),
-                        ));
-                      }
-                      return tooltipItems;
-                    }
-                ),
-              getTouchedSpotIndicator:
-                  (LineChartBarData barData, List<int> indicators) {
-                return indicators.map((index) {
-                  return TouchedSpotIndicatorData(
-                    FlLine(color: Colors.white, strokeWidth: 1),
-                    FlDotData(
-                      show: true,
-                      getDotPainter: (spot, percent, barData, index) =>
-                          FlDotCirclePainter(
-                            radius: 4,
-                            color: Colors.white,
-                            strokeWidth: 2,
-                            strokeColor: Colors.black,
-                          ),
                     ),
-                  );
-                }).toList();
-              },
-              // Custom drawing of crosshair
-              getTouchLineStart: (barData, index) => double.negativeInfinity,
-              getTouchLineEnd: (barData, index) => double.infinity,
-            ),
-          ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      color: Colors.black87,
+                      child: GridView.count(
+                        physics: NeverScrollableScrollPhysics(),
+                        reverse: true,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 2,
+                        children: [
+
+                          CoinData(name: "Low",value: coin.low24h.toString(),),
+                          CoinData(name: "High",value: coin.high24h.toString(),),
+                          CoinData(name: "Market Cap",value: coin.marketCap.toString(),),
+                          CoinData(name: "Volume",value: coin.totalVolume.toString(),),
+                          CoinData(name: "Avaliable Supply",value: coin.circulatingSupply.toString(),),
+                          CoinData(name: "Total Supply",value: coin.totalVolume.toString(),),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );

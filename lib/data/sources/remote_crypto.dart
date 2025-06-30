@@ -31,7 +31,7 @@ abstract class RemoteCryptoSource {
       @Path() String id,
         {
           @Query('vs_currency') String vs_currency = 'usd',
-          @Query('days') String days = '30',
+          @Query('days') double days = 30,
         }
       );
 }

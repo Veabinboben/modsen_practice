@@ -145,7 +145,7 @@ class _RemoteCryptoSource implements RemoteCryptoSource {
     String apiKey,
     String id, {
     String vs_currency = 'usd',
-    String days = '30',
+    double days = 30,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../domain/models/coin_model.dart';
 
@@ -15,6 +16,9 @@ class CryptoListTile extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       child: ListTile(
+        onTap: (){
+          context.push("/crypto/chart",extra: _coin);
+        },
         leading: Container(
           decoration: BoxDecoration(
             border: Border.all(

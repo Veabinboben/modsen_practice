@@ -62,4 +62,18 @@ class CryptoRepo implements AbstractCryptoRepo{
     }
   }
 
+  @override
+  Future<List<List<double>>> coinChartData(String coinId) async{
+    try{
+      final res = await _source.coinChartData(_apikey, coinId,days: 2);
+      final len = res.prices.length;
+      return res.prices.sublist(len-24,len);
+    }
+    on DioException catch (e){
+      logger.e(e.message);
+      //TODO remove, this is for debug testing
+      return [[1,2], [3,4]];
+    }
+  }
+
 }
