@@ -63,16 +63,23 @@ class RemoteCryptoRepo implements AbstractRemoteCryptoRepo{
   }
 
   @override
-  Future<List<List<double>>> coinChartData(String coinId) async{
+  Future<List<List<double>>> coinChartData(String coinId, {double days = 1}) async{
     try{
-      final res = await _source.coinChartData(_apikey, coinId,days: 2);
-      final len = res.prices.length;
-      return res.prices.sublist(len-24,len);
+      if (days == 1)
+      {
+        days = 2;
+        final res = await _source.coinChartData(_apikey, coinId, days: days);
+        final len = res.prices.length;
+        return res.prices.sublist(len - 24, len);
+      }
+      else {
+        final res = await _source.coinChartData(_apikey, coinId, days: days);
+        return res.prices;
+      }
     }
     on DioException catch (e){
       logger.e(e.message);
-      //TODO remove, this is for debug testing
-      return [[1,2], [3,4]];
+      return [];
     }
   }
 

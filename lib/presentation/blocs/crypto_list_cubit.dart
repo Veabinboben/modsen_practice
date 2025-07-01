@@ -30,6 +30,9 @@ class CryptoListCubit extends Cubit<CryptoListState>{
     }
     else {
       _localRepo.saveCoinsListLastSnapshot(res);
+
+      //await _localRepo.saveFavouriteCoin(res.first);
+      //await _localRepo.deleteFavouriteCoin(res.first);
       emit(GotListState(res,page));
     }
   }

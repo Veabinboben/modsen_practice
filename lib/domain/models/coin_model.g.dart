@@ -4072,7 +4072,7 @@ Coin _$CoinFromJson(Map<String, dynamic> json) => Coin(
       (json['atl'] as num?)?.toDouble(),
       (json['atl_change_percentage'] as num?)?.toDouble(),
       json['atl_date'] as String?,
-      json['lastUpdated'] as String?,
+      json['last_updated'] as String?,
       json['platforms'] as String?,
     )..isarId = (json['isarId'] as num?)?.toInt();
 
@@ -4102,6 +4102,6 @@ Map<String, dynamic> _$CoinToJson(Coin instance) => <String, dynamic>{
       'atl': instance.atl,
       'atl_change_percentage': instance.atlChangePercentage,
       'atl_date': instance.atlDate,
-      'lastUpdated': instance.lastUpdated,
+      'last_updated': instance.lastUpdated,
       'platforms': instance.platforms,
     };

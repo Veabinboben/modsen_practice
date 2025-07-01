@@ -4,9 +4,11 @@ import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:modsen_practice/domain/repository/abstract_local_crypto_repo.dart';
 
 class LocalCryptoRepo implements AbstractLocalCryptoRepo{
-  LocalCryptoRepo(AbstractLocalCoinsDbSource localCoins, AbstractLocalChartsDbSource localCharts):
+  LocalCryptoRepo(AbstractLocalCoinsDbSource localCoins,
+      AbstractLocalChartsDbSource localCharts):
       _localCharts = localCharts,
-      _localCoins = localCoins;
+      _localCoins = localCoins
+  ;
 
 
   late final AbstractLocalCoinsDbSource _localCoins;
@@ -33,6 +35,28 @@ class LocalCryptoRepo implements AbstractLocalCryptoRepo{
   @override
   Future<void> saveCoinsListLastSnapshot(List<Coin> coins) async {
     await _localCoins.saveCoinsToDb(coins);
+  }
+
+  @override
+  Future<void> deleteFavouriteCoin(Coin coin)async {
+    await _localCoins.deleteFavouriteCoinsFromDb(coin);
+  }
+
+  @override
+  Future<List<Coin>> getFavouriteCoinsListLastSnapshot()async {
+    final res = await _localCoins.getFavouriteCoinsFromDB();
+    return res ?? [];
+  }
+
+  @override
+  Future<void> saveFavouriteCoin(Coin coin)async {
+    await _localCoins.saveFavouriteCoinToDb(coin);
+  }
+
+  @override
+  Future<bool> checkIfFavouriteCoin(Coin coin) async{
+    final res = await _localCoins.getFavouriteCoinFromDB(coin.id!);
+    return res != null ? true : false;
   }
 
 }

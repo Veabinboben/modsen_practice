@@ -54,10 +54,13 @@ class IsarChartsDbSource implements AbstractLocalChartsDbSource{
   @override
   Future<void> saveChartToDb(List<List<double>> chart, String id) async {
     await _isar!.writeTxn(() async {
-      final chartData = ChartData(id, []);
+      var chartData = (await _isar!.chartDatas.filter().idEqualTo(id).findFirst());
+      if (chartData == null) chartData = ChartData(id, []);
       chartData.prices = chart;
-      await _isar.chartDatas!.put(chartData);
+      final res  = await _isar.chartDatas!.put(chartData);
+      //logger.i(res);
     });
+
     logger.i("chart set");
   }
 

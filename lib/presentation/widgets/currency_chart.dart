@@ -28,8 +28,6 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
     // FlSpot(5, 6),
   ];
   List<LineChartBarData> _Animlines = [];
-  int prevVal = -1;
-  bool needToFinalizeLine = false;
   double maxX = 0;
   double minX = 0;
   double maxY = 0;
@@ -145,7 +143,7 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     int counter = 0;
     return Padding(
-      padding: EdgeInsets.only(top: 20,left: 20,right: 20),
+      padding: EdgeInsets.only(top: 20,left: 20,right: 20,bottom: 0),
       child: LineChart(
         transformationConfig: FlTransformationConfig(
             minScale: 1,
@@ -167,7 +165,7 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
               rightTitles: AxisTitles(
                 sideTitles: SideTitles(
                   showTitles: true,
-                  reservedSize: 40,
+                  reservedSize: 60,
                   // getTitlesWidget: (value, meta){
                   //     return SideTitleWidget(child: Text(value.toString()), meta: meta);
                   // }
@@ -176,7 +174,7 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
               bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                       showTitles: true,
-                      //reservedSize: 80,
+                      reservedSize: 40,
                       getTitlesWidget: (value, meta){
                         if ((counter++) % 2 != 0) {return Text("");}
                         else {
@@ -197,8 +195,8 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
           ),
           minX: minX,
           maxX: maxX,
-          minY: minY,
-          maxY: maxY,
+          minY: minY * 0.999,
+          maxY: maxY * 1.001,
           lineBarsData: _Animlines,
           //TODO change tooltip here
           lineTouchData: LineTouchData(
@@ -217,10 +215,13 @@ class _CryptoChartState extends State<CryptoChart> with SingleTickerProviderStat
                     final spot = touchedSpots[i];
                     final time = DateTime.fromMillisecondsSinceEpoch(
                         spot.x.toInt());
-                    final formatedTime = DateFormat('kk:mm').format(time);
+                    final formatedTime = DateFormat('dd MMM - kk:mm').format(time);
                     tooltipItems.add(LineTooltipItem(
-                      "${spot.y.toString()}\n$formatedTime",
+                      "\$${spot.y.toStringAsFixed(5)}\n",
                       TextStyle(color: Colors.white),
+                      children: [
+                        TextSpan(text: "$formatedTime UTC",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),)
+                      ],
                     ));
                   }
                   return tooltipItems;

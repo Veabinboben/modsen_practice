@@ -1,4 +1,7 @@
 import 'package:isar/isar.dart';
+import 'package:modsen_practice/data/models/chart_data.dart';
+import 'package:modsen_practice/data/models/favourite_coin.dart';
+import 'package:modsen_practice/domain/models/coin_model.dart';
 import 'package:modsen_practice/main.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,7 +27,8 @@ class IsarUserDbSource implements AbstractLocalUserDbSource{
 
   static Future<void> openUserDb() async {
     final dir = await getApplicationDocumentsDirectory();
-    await Isar.open([UserSchema], directory: dir.path,name: _dbName);
+    //TODO remove unnecesary
+    await Isar.open([UserSchema,CoinSchema,FavouriteCoinSchema,ChartDataSchema], directory: dir.path,name: _dbName);
   }
 
   late final Isar? _isar;

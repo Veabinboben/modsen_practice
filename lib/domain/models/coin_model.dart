@@ -50,7 +50,7 @@ class Coin{
   double? atlChangePercentage;
   @JsonKey(name: "atl_date")
   String? atlDate;
-  @JsonKey(name: "lastUpdated")
+  @JsonKey(name: "last_updated")
   String? lastUpdated;
   //TODO make another class
   String? platforms;

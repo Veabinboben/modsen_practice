@@ -15,8 +15,8 @@ class ChartData{
   List<List<double>> get prices {
     // Convert the flattened list back to a nested list
     List<List<double>> nestedPrices = [];
-    for (int i = 0; i < flattenedPrices.length; i += 3) {
-      nestedPrices.add(flattenedPrices.sublist(i, i + 3));
+    for (int i = 0; i < flattenedPrices.length; i += 2) {
+      nestedPrices.add(flattenedPrices.sublist(i, i + 2));
     }
     return nestedPrices;
   }
