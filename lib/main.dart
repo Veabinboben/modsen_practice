@@ -21,6 +21,7 @@ import 'package:modsen_practice/presentation/blocs/example_cubit.dart';
 import "package:dio/dio.dart";
 import 'package:firebase_core/firebase_core.dart';
 import 'package:modsen_practice/presentation/pages/crypto_chart_page.dart';
+import 'package:modsen_practice/presentation/pages/crypto_fav_list.dart';
 import 'package:modsen_practice/presentation/pages/crypto_list_page.dart';
 import 'package:modsen_practice/presentation/pages/example_page.dart';
 import 'package:modsen_practice/presentation/pages/login_register_page.dart';

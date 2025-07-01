@@ -60,6 +60,14 @@ final GoRouter _router = GoRouter(
                         },
                         routes: []
                     ),
+                    GoRoute(
+                        name: 'favourite',
+                        path: '/favourite',
+                        builder: (context, state) {
+                          return CryptoFavList();
+                        },
+                        routes: []
+                    ),
                   ]
               ),
             ],

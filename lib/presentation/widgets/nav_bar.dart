@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../main.dart';
 
@@ -15,14 +16,20 @@ class NavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ClipPath(
-            clipper: HexaClipper(),
-            clipBehavior: Clip.antiAlias,
-            child: AspectRatio(
-                aspectRatio: 1,
-                child: Container(height: 50,width: 50,color: Colors.blue,child: Icon(Icons.add))
-            )
-          ),
+          TextButton(onPressed: (){
+            context.go("/crypto/list");
+          }, child: Text("CryptoList")),
+          TextButton(onPressed: (){
+            context.go("/crypto/favourite");
+          }, child: Text("CryptoFav")),
+          // ClipPath(
+          //   clipper: HexaClipper(),
+          //   clipBehavior: Clip.antiAlias,
+          //   child: AspectRatio(
+          //       aspectRatio: 1,
+          //       child: Container(height: 50,width: 50,color: Colors.blue,child: Icon(Icons.add))
+          //   )
+          // ),
         ],
       ),
     );
